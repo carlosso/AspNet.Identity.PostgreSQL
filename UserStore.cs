@@ -18,8 +18,8 @@ namespace AspNet.Identity.PostgreSQL
         IUserSecurityStampStore<TUser>,
         IQueryableUserStore<TUser>,
         IUserEmailStore<TUser>,
-        IUserStore<TUser> where TUser : IdentityUser,
-        IUserLockoutStore<TUser,string>
+        IUserStore<TUser>,
+        IUserLockoutStore<TUser, string> where TUser : IdentityUser
 
     {
         private UserTable<TUser> userTable;
@@ -593,7 +593,7 @@ namespace AspNet.Identity.PostgreSQL
 
         public Task SetLockoutEnabledAsync(TUser user, bool enabled)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(false);
         }
 
         public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
