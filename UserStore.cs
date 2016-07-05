@@ -19,7 +19,10 @@ namespace AspNet.Identity.PostgreSQL
         IQueryableUserStore<TUser>,
         IUserEmailStore<TUser>,
         IUserStore<TUser>,
-        IUserLockoutStore<TUser, string> where TUser : IdentityUser
+        IUserLockoutStore<TUser, string>,
+        IUserPhoneNumberStore<TUser>,
+        IUserTwoFactorStore<TUser, string>
+        where TUser : IdentityUser
 
     {
         private UserTable<TUser> userTable;
@@ -602,5 +605,35 @@ namespace AspNet.Identity.PostgreSQL
         }
         #endregion
 
+
+        public Task<string> GetPhoneNumberAsync(TUser user)
+        {
+            return Task.FromResult("");
+        }
+
+        public Task<bool> GetPhoneNumberConfirmedAsync(TUser user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetPhoneNumberAsync(TUser user, string phoneNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> GetTwoFactorEnabledAsync(TUser user)
+        {
+            return Task.FromResult(false);
+        }
+
+        public Task SetTwoFactorEnabledAsync(TUser user, bool enabled)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
