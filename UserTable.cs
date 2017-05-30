@@ -234,6 +234,32 @@ namespace AspNet.Identity.PostgreSQL
             parameters.Add("@email", user.Email);
             parameters.Add("@emailconfirmed", user.EmailConfirmed);
 
+            _database.Execute(commandText, parameters);
+
+            //---carlosso----
+
+            commandText = @"INSERT INTO uzivatele (mlogin,email,posilat,dnipredem,jespravce) 
+                VALUES (@name, @email, @posilat, @dnipredem, 'N')";
+
+            /*
+                  poznamka character(50),
+                    email character(50),
+                    jespravce character(1),
+                    mlogin character(50) NOT NULL,
+                    heslo character(50),
+                    ipadresa character varying(20),
+                    datum character varying(30),
+                    prohlizec character varying(254),
+                    posilat character(1),
+                    dnipredem smallint,
+            */
+
+            parameters = new Dictionary<string, object>();
+            parameters.Add("@name", user.UserName);
+            parameters.Add("@email", user.Email);
+            parameters.Add("@posilat", user.Posilat);
+            parameters.Add("@dnipredem", user.DniPredem);
+
             return _database.Execute(commandText, parameters);
         }
 
@@ -285,6 +311,7 @@ namespace AspNet.Identity.PostgreSQL
             parameters.Add("@userId", user.Id);
             parameters.Add("@email", user.Email);
             parameters.Add("@emailconfirmed", user.EmailConfirmed);
+            //---carlosso-----
 
             return _database.Execute(commandText, parameters);
         }

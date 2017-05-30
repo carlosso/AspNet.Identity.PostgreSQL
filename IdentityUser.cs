@@ -56,6 +56,11 @@ namespace AspNet.Identity.PostgreSQL
         /// </summary>
         public virtual string SecurityStamp { get; set; }
 
-    
+        //----carlosso-----
+        public virtual string Posilat { get; set; }
+        public virtual Int16? DniPredem { get; set; }
+
+
+
     }
 }

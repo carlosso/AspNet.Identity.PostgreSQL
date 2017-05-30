@@ -571,7 +571,7 @@ namespace AspNet.Identity.PostgreSQL
         #region LockoutStore
         public Task<int> GetAccessFailedCountAsync(TUser user)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(0);
         }
 
         public Task<bool> GetLockoutEnabledAsync(TUser user)
