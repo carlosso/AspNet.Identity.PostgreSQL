@@ -238,8 +238,8 @@ namespace AspNet.Identity.PostgreSQL
 
             //---carlosso----
 
-            commandText = @"INSERT INTO uzivatele (mlogin,email,posilat,dnipredem,jespravce) 
-                VALUES (@name, @email, @posilat, @dnipredem, 'N')";
+            commandText = @"INSERT INTO uzivatele (mlogin,posilat,dnipredem) 
+                VALUES (@name, @posilat, @dnipredem)";
 
             /*
                   poznamka character(50),
@@ -256,7 +256,6 @@ namespace AspNet.Identity.PostgreSQL
 
             parameters = new Dictionary<string, object>();
             parameters.Add("@name", user.UserName);
-            parameters.Add("@email", user.Email);
             parameters.Add("@posilat", user.Posilat);
             parameters.Add("@dnipredem", user.DniPredem);
 
