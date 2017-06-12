@@ -238,28 +238,40 @@ namespace AspNet.Identity.PostgreSQL
 
             //---carlosso----
 
-            commandText = @"INSERT INTO uzivatele (mlogin,posilat,dnipredem) 
-                VALUES (@name, @posilat, @dnipredem)";
+            //--TODO---zjistime jestli uz v tabulce uzivatele uzivatel neni - to docasne, az to pobezi normnalne, tak tam nesmi byt
 
-            /*
-                  poznamka character(50),
-                    email character(50),
-                    jespravce character(1),
-                    mlogin character(50) NOT NULL,
-                    heslo character(50),
-                    ipadresa character varying(20),
-                    datum character varying(30),
-                    prohlizec character varying(254),
-                    posilat character(1),
-                    dnipredem smallint,
-            */
+            string commandTextCount = "SELECT * FROM uzivatele WHERE mlogin = @mlogin";
+            Dictionary<string, object> parameters2 = new Dictionary<string, object>() { { "@mlogin", user.UserName } };
 
-            parameters = new Dictionary<string, object>();
-            parameters.Add("@name", user.UserName);
-            parameters.Add("@posilat", user.Posilat);
-            parameters.Add("@dnipredem", user.DniPredem);
+            var rows = _database.Query(commandTextCount, parameters2);
+            if (rows.Count == 0)
+            {
 
-            return _database.Execute(commandText, parameters);
+                DateTime dnes = DateTime.Now;
+
+                commandText = @"INSERT INTO uzivatele (mlogin,poznamka) 
+                VALUES (@name,@poznamka)";
+
+                /*
+                      poznamka character(50),
+                        email character(50),
+                        jespravce character(1),
+                        mlogin character(50) NOT NULL,
+                        heslo character(50),
+                        ipadresa character varying(20),
+                        datum character varying(30),
+                        prohlizec character varying(254),
+                        posilat character(1),
+                        dnipredem smallint,
+                */
+
+                parameters = new Dictionary<string, object>();
+                parameters.Add("@name", user.UserName);
+                parameters.Add("@poznamka", "Uživatel zaregistrován dne: "+dnes.ToString("yyyy-MM-dd HH:mm")+".");
+
+                _database.Execute(commandText, parameters);
+            }
+            return 1;
         }
 
         /// <summary>
