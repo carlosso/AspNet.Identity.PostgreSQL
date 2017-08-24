@@ -7,7 +7,7 @@ namespace AspNet.Identity.PostgreSQL
     /// Class that represents the AspNetUsers table in the PostgreSQL database.
     /// </summary>
     public class UserTable<TUser>
-        where TUser :IdentityUser
+        where TUser : IdentityUser
     {
         private PostgreSQLDatabase _database;
 
@@ -116,7 +116,7 @@ namespace AspNet.Identity.PostgreSQL
             Dictionary<string, object> parameters = new Dictionary<string, object>() { { "@name", userName } };
 
             var rows = _database.Query(commandText, parameters);
-            foreach(var row in rows)
+            foreach (var row in rows)
             {
                 TUser user = (TUser)Activator.CreateInstance(typeof(TUser));
                 user.Id = row["Id"];
@@ -174,7 +174,7 @@ namespace AspNet.Identity.PostgreSQL
             parameters.Add("@id", userId);
 
             var passHash = _database.GetStrValue(commandText, parameters);
-            if(string.IsNullOrEmpty(passHash))
+            if (string.IsNullOrEmpty(passHash))
             {
                 return null;
             }
@@ -238,40 +238,16 @@ namespace AspNet.Identity.PostgreSQL
 
             //---carlosso----
 
-            //--TODO---zjistime jestli uz v tabulce uzivatele uzivatel neni - to docasne, az to pobezi normnalne, tak tam nesmi byt
+            DateTime dnes = DateTime.Now;
 
-            string commandTextCount = "SELECT * FROM uzivatele WHERE mlogin = @mlogin";
-            Dictionary<string, object> parameters2 = new Dictionary<string, object>() { { "@mlogin", user.UserName } };
-
-            var rows = _database.Query(commandTextCount, parameters2);
-            if (rows.Count == 0)
-            {
-
-                DateTime dnes = DateTime.Now;
-
-                commandText = @"INSERT INTO uzivatele (mlogin,poznamka) 
+            commandText = @"INSERT INTO uzivatele (mlogin,poznamka) 
                 VALUES (@name,@poznamka)";
 
-                /*
-                      poznamka character(50),
-                        email character(50),
-                        jespravce character(1),
-                        mlogin character(50) NOT NULL,
-                        heslo character(50),
-                        ipadresa character varying(20),
-                        datum character varying(30),
-                        prohlizec character varying(254),
-                        posilat character(1),
-                        dnipredem smallint,
-                */
+            parameters = new Dictionary<string, object>();
+            parameters.Add("@name", user.UserName);
+            parameters.Add("@poznamka", "Uživatel zaregistrován dne: " + dnes.ToString("yyyy-MM-dd HH:mm") + ".");
 
-                parameters = new Dictionary<string, object>();
-                parameters.Add("@name", user.UserName);
-                parameters.Add("@poznamka", "Uživatel zaregistrován dne: "+dnes.ToString("yyyy-MM-dd HH:mm")+".");
-
-                _database.Execute(commandText, parameters);
-            }
-            return 1;
+            return _database.Execute(commandText, parameters);
         }
 
         /// <summary>
@@ -307,11 +283,11 @@ namespace AspNet.Identity.PostgreSQL
         {
             var lowerCaseEmail = user.Email == null ? null : user.Email.ToLower();
 
-//            string commandText = @"
-//                UPDATE ""AspNetUsers""
-//                   SET ""UserName"" = @userName, ""PasswordHash"" = @pswHash, ""SecurityStamp"" = @secStamp, ""Email""= @email, 
-//                       ""EmailConfirmed"" = @emailconfirmed
-//                 WHERE ""Id"" = @userId;";
+            //            string commandText = @"
+            //                UPDATE ""AspNetUsers""
+            //                   SET ""UserName"" = @userName, ""PasswordHash"" = @pswHash, ""SecurityStamp"" = @secStamp, ""Email""= @email, 
+            //                       ""EmailConfirmed"" = @emailconfirmed
+            //                 WHERE ""Id"" = @userId;";
 
             string commandText = "UPDATE \"AspNetUsers\" SET \"UserName\" = @userName, \"PasswordHash\" = @pswHash, \"SecurityStamp\" = @secStamp, \"Email\"= @email, \"EmailConfirmed\" = @emailconfirmed WHERE \"Id\" = @userId;";
 
